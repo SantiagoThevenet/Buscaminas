@@ -38,6 +38,7 @@ def contMinas(tablero,fila,columna):
             return contMinas
 
 
+
 def autoPoner(tablero,tableroSinMinas,columna,fila):
     ceros = [(fila,columna)]
     while len(ceros) > 0:
