@@ -71,13 +71,25 @@ def juegoPrincipal(tableroFlecha,emojisList,tableroSinMinas,tablero,simbolo):
         tableroFlecha[fila][columna] = posAnterior
         movFich = input('Donde quieres moverte usando W/A/S/D: ').lower()
         if movFich == 'w' and fila <= 7 and fila >= 0:
-            fila-=1
+            if fila == 0:
+                pass
+            else:
+                fila-=1
         elif movFich == 's' and fila <= 7 and fila >= 0:
-            fila+=1
+            if fila == 7:
+                pass
+            else:
+                fila+=1
         elif movFich == 'a' and columna <= 7 and columna >= 0:
-            columna-=1
+            if columna == 0:
+                pass
+            else:
+                columna-=1
         elif movFich == 'd' and columna <= 7 and columna >= 0:
-            columna+=1
+            if columna == 7:
+                pass
+            else:
+                columna+=1
         else:
             continue
         posAnterior=tableroFlecha[fila][columna]
