@@ -93,7 +93,7 @@ print('''
         |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
 
     ''')
-print('El objetivo del juego Buscaminas es liberar todas las casillas que no tienen una mina.\nEl tablero es de 8x8 y en el habran 10 minas que deberas de evitar.\nLas casillas con número indican la cantidad de minas en las casillas que la rodean.\nLas banderas te serviran de referencia a ti mismo para saber donde puede haber una mina, estas las podras desplegar por todo el tablero.\nPara poder moverte por el tablero necesitaras de las teclas W/A/S/D, pero no se leeran automaticamente tendras que pulsar el enter para moverte.\nMucha suerte!!!')
+print('El objetivo del juego Buscaminas es liberar todas las casillas que no tienen una mina.\nEl tablero es de 8x8 y en el habran 10 minas que deberas de evitar.\nLas casillas con número indican la cantidad de minas en las casillas que la rodean.\nLas banderas te serviran de referencia a ti mismo para saber donde puede haber una mina, estas las podras desplegar por todo el tablero.\nPara poder moverte por el tablero necesitaras de las teclas W/A/S/D, pero no se leeran automaticamente tendras que pulsar el enter para moverte.\nPara confirmar la posicion que quieres elejir deberas pular espacio y luego enter\nMucha suerte!!!')
 print()
 input('Dale a enter para empezar: ')
 os.system('cls')
