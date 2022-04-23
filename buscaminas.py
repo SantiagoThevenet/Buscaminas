@@ -37,8 +37,6 @@ def contMinas(tablero,fila,columna):
         else:
             return contMinas
 
-
-
 def autoPoner(tablero,tableroSinMinas,columna,fila):
     ceros = [(fila,columna)]
     while len(ceros) > 0:
@@ -58,6 +56,100 @@ def autoPoner(tablero,tableroSinMinas,columna,fila):
                         tablero[fila+i][columna+x] = ' '+str(contMinas(tablero,fila+i,columna+x))
                 else:
                     continue
+
+def juegoPrincipal(tableroFlecha,emojisList,tableroSinMinas,tablero,simbolo):
+    fila = 0
+    columna = 0
+    posAnterior=tableroFlecha[fila][columna]
+    movFich = 0
+    emojiRandom=emojisList[random.randrange(0,len(emojisList))]
+    tableroFlecha[fila][columna] = emojiRandom
+    mensajeBuscaminas()         
+    mostrarTablero(tableroFlecha)
+    while movFich != ' ':
+        emojiRandom=emojisList[random.randrange(0,len(emojisList))]
+        tableroFlecha[fila][columna] = posAnterior
+        movFich = input('Donde quieres moverte usando W/A/S/D: ').lower()
+        if movFich == 'w' and fila <= 7 and fila >= 0:
+            fila-=1
+        elif movFich == 's' and fila <= 7 and fila >= 0:
+            fila+=1
+        elif movFich == 'a' and columna <= 7 and columna >= 0:
+            columna-=1
+        elif movFich == 'd' and columna <= 7 and columna >= 0:
+            columna+=1
+        else:
+            continue
+        posAnterior=tableroFlecha[fila][columna]
+        tableroFlecha[fila][columna] = emojiRandom
+        os.system('cls')
+        mensajeBuscaminas()         
+        mostrarTablero(tableroFlecha)
+        tableroFlecha[fila][columna] = '  '
+    if simbolo == True:
+        cont=0
+        if tablero[fila][columna] == '💣':
+            os.system('cls')
+            print('''
+             _____    ______   _____    _____    _____    _____   _______   ______ 
+            |  __ \  |  ____| |  __ \  |  __ \  |_   _|  / ____| |__   __| |  ____|
+            | |__) | | |__    | |__) | | |  | |   | |   | (___      | |    | |__   
+            |  ___/  |  __|   |  _  /  | |  | |   | |    \___ \     | |    |  __|  
+            | |      | |____  | | \ \  | |__| |  _| |_   ____) |    | |    | |____ 
+            |_|      |______| |_|  \_\ |_____/  |_____| |_____/     |_|    |______|
+                ''')
+            mostrarTablero(tablero)
+            return 0
+        elif contMinas(tablero,fila,columna) == 0 and tablero[fila][columna] == '  ':
+            tablero[fila][columna]=' 0'
+            tableroSinMinas[fila][columna]=' 0'
+            autoPoner(tablero,tableroSinMinas,columna,fila)
+        elif contMinas(tablero,fila,columna) != '🚩' and tablero[fila][columna] == '  ':
+            tableroSinMinas[fila][columna] = ' '+str(contMinas(tablero,fila,columna))
+            tablero[fila][columna] = ' '+str(contMinas(tablero,fila,columna))
+    
+        for i in range(8):
+            for x in range(8):
+                if tableroSinMinas[i][x] != '  ' and tableroSinMinas[i][x] != '💣' and tableroSinMinas[i][x] != '🚩':
+                    cont+=1
+        time.sleep(0.001)
+        if cont==54:
+            os.system('cls')
+            print('''
+          _____              _   _               _____   _______   ______ 
+         / ____|     /\     | \ | |     /\      / ____| |__   __| |  ____|
+        | |  __     /  \    |  \| |    /  \    | (___      | |    | |__   
+        | | |_ |   / /\ \   |     |   / /\ \    \___ \     | |    |  __|  
+        | |__| |  / ____ \  | |\  |  / ____ \   ____) |    | |    | |____ 
+         \_____| /_/    \_\ |_| \_| /_/    \_\ |_____/     |_|    |______|
+                                                                                                            
+            ''')
+            mostrarTablero(tablero)
+            return 0
+        mostrarTablero(tableroSinMinas)
+    elif tableroSinMinas[fila][columna] == '🚩' and simbolo == '🚩':
+        if tableroFlecha[fila][columna] == '  ':
+            print('NO HAY BANDERA')
+        else:
+            tableroSinMinas[fila][columna] = '  '
+            tablero[fila][columna] = '  '
+    elif tableroSinMinas[fila][columna] == '  ' and simbolo == False:
+        tableroSinMinas[fila][columna] = '🚩'
+        tablero[fila][columna] = '🚩'
+    else:
+        print('ashee')
+    os.system('cls')
+
+def mensajeBuscaminas():
+    print('''
+         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
+        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
+        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
+        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
+        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
+        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
+
+        ''') 
 
 tablero = [[ '  ' for i in range(8)] for i in range(8)]
 tableroSinMinas = deepcopy(tablero)
@@ -100,204 +192,18 @@ os.system('cls')
 while True:   
     tableroFlecha = deepcopy(tableroSinMinas)
     os.system('cls')
-    print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-    ''')
+    mensajeBuscaminas()
     mostrarTablero(tableroSinMinas)                                                        
     bandera=input('Quieres poner una bandera?:\ns = Poner Bandera\nn = Quitar Bandera\nj = Juagar\nsalir = Sales del buscaminas\nElije: ').lower()
     os.system('cls')
     emojisList=['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾']
     if bandera == 's':
-        fila = 0
-        columna = 0
-        posAnterior=tableroFlecha[fila][columna]
-        movFich = 0
-        emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-        tableroFlecha[fila][columna] = emojiRandom
-        print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-        ''')          
-        mostrarTablero(tableroFlecha)
-        while movFich != ' ':
-            emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-            tableroFlecha[fila][columna] = posAnterior
-            movFich = input('Donde quieres moverte usando W/A/S/D: ').lower()
-            if movFich == 'w' and fila <= 7 and fila >= 0:
-                fila-=1
-            elif movFich == 's' and fila <= 7 and fila >= 0:
-                fila+=1
-            elif movFich == 'a' and columna <= 7 and columna >= 0:
-                columna-=1
-            elif movFich == 'd' and columna <= 7 and columna >= 0:
-                columna+=1
-            else:
-                continue
-            posAnterior=tableroFlecha[fila][columna]
-            tableroFlecha[fila][columna] = emojiRandom
-            os.system('cls')
-            print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-            ''')          
-            mostrarTablero(tableroFlecha)
-            tableroFlecha[fila][columna] = '  '
-        tableroSinMinas[fila][columna]='🚩'
-        tablero[fila][columna]='🚩'
+        juegoPrincipal(tableroFlecha,emojisList,tableroSinMinas,tablero,False)
     elif bandera == 'n':
-        fila = 0
-        columna = 0
-        posAnterior=tableroFlecha[fila][columna]
-        movFich = 0
-        emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-        tableroFlecha[fila][columna] = emojiRandom
-        print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-        ''')          
-        mostrarTablero(tableroFlecha)
-        while movFich != ' ':
-            emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-            tableroFlecha[fila][columna] = posAnterior
-            movFich = input('Donde quieres moverte usando W/A/S/D: ').lower()
-            if movFich == 'w' and fila <= 7 and fila >= 0:
-                fila-=1
-            elif movFich == 's' and fila <= 7 and fila >= 0:
-                fila+=1
-            elif movFich == 'a' and columna <= 7 and columna >= 0:
-                columna-=1
-            elif movFich == 'd' and columna <= 7 and columna >= 0:
-                columna+=1
-            else:
-                continue
-            posAnterior=tableroFlecha[fila][columna]
-            tableroFlecha[fila][columna] = emojiRandom
-            os.system('cls')
-            print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-            ''')          
-            mostrarTablero(tableroFlecha)
-            tableroFlecha[fila][columna] = '  '
-        if tableroSinMinas[fila][columna] == '🚩':
-            tableroSinMinas[fila][columna] = '  '
-            tablero[fila][columna] = '  '
-        else:
-            print('NO HAY BANDERA')
-            time.sleep(2)
-        os.system('cls')
+        juegoPrincipal(tableroFlecha,emojisList,tableroSinMinas,tablero,'🚩')
     elif bandera == 'j':
-        fila = 0
-        columna = 0
-        posAnterior=tableroFlecha[fila][columna]
-        movFich = 0
-        emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-        tableroFlecha[fila][columna] = emojiRandom
-        print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-        ''')          
-        mostrarTablero(tableroFlecha)
-        while movFich != ' ':
-            emojiRandom=emojisList[random.randrange(0,len(emojisList))]
-            tableroFlecha[fila][columna] = posAnterior
-            movFich = input('Donde quieres moverte usando W/A/S/D: ').lower()
-            if movFich == 'w' and fila <= 7 and fila >= 0:
-                fila-=1
-            elif movFich == 's' and fila <= 7 and fila >= 0:
-                fila+=1
-            elif movFich == 'a' and columna <= 7 and columna >= 0:
-                columna-=1
-            elif movFich == 'd' and columna <= 7 and columna >= 0:
-                columna+=1
-            else:
-                continue
-            posAnterior=tableroFlecha[fila][columna]
-            tableroFlecha[fila][columna] = emojiRandom
-            os.system('cls')
-            print('''
-         ____  _    _  _____  _____          __  __ _____ _   _           _____ 
-        |  _ \| |  | |/ ____|/ ____|   /\   |  \/  |_   _| \ | |   /\    / ____|
-        | |_) | |  | | (___ | |       /  \  | \  / | | | |  \| |  /  \  | (___  
-        |  _ <| |  | |\___ \| |      / /\ \ | |\/| | | | |     | / /\ \  \___ \ 
-        | |_) | |__| |____) | |____ / ____ \| |  | |_| |_| |\  |/ ____ \ ____) |
-        |____/ \____/|_____/ \_____/_/    \_\_|  |_|_____|_| \_/_/    \_\_____/ 
-
-            ''')          
-            mostrarTablero(tableroFlecha)
-            tableroFlecha[fila][columna] = '  '
-        os.system('cls')
-        cont=0
-        if tablero[fila][columna] == '💣':
-            os.system('cls')
-            print('''
-             _____    ______   _____    _____    _____    _____   _______   ______ 
-            |  __ \  |  ____| |  __ \  |  __ \  |_   _|  / ____| |__   __| |  ____|
-            | |__) | | |__    | |__) | | |  | |   | |   | (___      | |    | |__   
-            |  ___/  |  __|   |  _  /  | |  | |   | |    \___ \     | |    |  __|  
-            | |      | |____  | | \ \  | |__| |  _| |_   ____) |    | |    | |____ 
-            |_|      |______| |_|  \_\ |_____/  |_____| |_____/     |_|    |______|
-                ''')
-            mostrarTablero(tablero)
+        if juegoPrincipal(tableroFlecha,emojisList,tableroSinMinas,tablero,True) == 0:
             break
-        elif contMinas(tablero,fila,columna) == 0 and tablero[fila][columna] == '  ':
-            tablero[fila][columna]=' 0'
-            tableroSinMinas[fila][columna]=' 0'
-            autoPoner(tablero,tableroSinMinas,columna,fila)
-        elif contMinas(tablero,fila,columna) != '🚩' and tablero[fila][columna] == '  ':
-            tableroSinMinas[fila][columna] = ' '+str(contMinas(tablero,fila,columna))
-            tablero[fila][columna] = ' '+str(contMinas(tablero,fila,columna))
-    
-        for i in range(8):
-            for x in range(8):
-                if tableroSinMinas[i][x] != '  ' and tableroSinMinas[i][x] != '💣' and tableroSinMinas[i][x] != '🚩':
-                    cont+=1
-        time.sleep(0.001)
-        if cont==54:
-            os.system('cls')
-            print('''
-          _____              _   _               _____   _______   ______ 
-         / ____|     /\     | \ | |     /\      / ____| |__   __| |  ____|
-        | |  __     /  \    |  \| |    /  \    | (___      | |    | |__   
-        | | |_ |   / /\ \   |     |   / /\ \    \___ \     | |    |  __|  
-        | |__| |  / ____ \  | |\  |  / ____ \   ____) |    | |    | |____ 
-         \_____| /_/    \_\ |_| \_| /_/    \_\ |_____/     |_|    |______|
-                                                                                                            
-            ''')
-            mostrarTablero(tablero)
-            break
-        mostrarTablero(tableroSinMinas)
     elif bandera == 'salir':
         os.system('cls')
         print()
@@ -308,6 +214,35 @@ while True:
         | | |_ ||  _  /   / /\ \ | |       | |    / /\ \   \___ \  |  ___/ | |  | ||  _  /   _   | || |  | ||  __| | | |_ |  / /\ \  |  _  / 
         | |__| || | \ \  / ____ \| |____  _| |_  / ____ \  ____) | | |     | |__| || | \ \  | |__| || |__| || |____| |__| | / ____ \ | | \ \ 
          \_____||_|  \_\/_/    \_\\_____||_____|/_/    \_\|_____/  |_|      \____/ |_|  \_\  \____/  \____/ |______|\_____|/_/    \_\|_|  \_\
+
+
+
+                 ________o8A888888o_
+            _o888888888888K_]888888o
+                      ~~~+8888888888o
+                          ~8888888888
+                          o88888888888
+                         o8888888888888
+                       _8888888888888888
+                      o888888888888888888_
+                     o88888888888888888888_
+                    _8888888888888888888888_
+                    888888888888888888888888_
+                    8888888888888888888888888
+                    88888888888888888888888888
+                    88888888888888888888888888
+                    888888888888888888888888888
+                    ~88888888888888888888888888_
+                     (88888888888888888888888888
+                      888888888888888888888888888
+                       888888888888888888888888888_
+                       ~8888888888888888888888888888
+                         +88888888888888888888~~~~~
+                          ~=888888888888888888o
+                   _=oooooooo888888888888888888
+                    _o88=8888==~88888888===8888_ 
+                    ~   =~~ _o88888888=      ~~~
+                            ~ o8=~88=~     
         ''')
         break
     else:
